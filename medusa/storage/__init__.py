@@ -35,6 +35,7 @@ from medusa.storage.s3_storage import S3Storage
 from medusa.storage.s3_rgw import S3RGWStorage
 from medusa.storage.azure_storage import AzureStorage
 from medusa.storage.ibm_storage import IBMCloudStorage
+from medusa.storage.s3_base_storage import S3BaseStorage
 
 
 ManifestObject = collections.namedtuple('ManifestObject', ['path', 'size', 'MD5'])
@@ -73,6 +74,7 @@ class Storage(object):
         self.storage_provider = self._config.storage_provider
 
     def _connect_storage(self):
+        logging.debug('Loading storage_provider: {}'.format(self._config.storage_provider))
         if self._config.storage_provider == Provider.GOOGLE_STORAGE:
             google_storage = GoogleStorage(self._config)
             google_storage.check_dependencies()
@@ -83,6 +85,10 @@ class Storage(object):
             return azure_storage
         elif self._config.storage_provider == Provider.S3_RGW:
             return S3RGWStorage(self._config)
+        elif self._config.storage_provider.lower() == "s3_compatible":
+            s3_storage = S3BaseStorage(self._config)
+            s3_storage.check_dependencies()
+            return s3_storage
         elif self._config.storage_provider.startswith(Provider.S3):
             s3_storage = S3Storage(self._config)
             s3_storage.check_dependencies()
