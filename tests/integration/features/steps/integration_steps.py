@@ -342,6 +342,12 @@ def _i_have_a_fresh_ccm_cluster_with_mgmt_api_running(context, cluster_name, cli
         )
     # get the Cassandra Management API jars
     get_mgmt_api_jars(version=context.cassandra_version)
+    # DEBUG LOG
+    agent_file = Path('/tmp/management-api-agent/target/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar')
+    print('Management API Setup: Exists: {}, Is File: {}, Is Symbolic Link: {}'.format(
+        agent_file.exists(), agent_file.is_file(), agent_file.is_symlink()))
+    print(subprocess.check_output(
+        ['ls', '-l', '/tmp/management-api-agent/target/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar']))
 
 
 @given(r'I am using "{storage_provider}" as storage provider in ccm cluster "{client_encryption}"')
