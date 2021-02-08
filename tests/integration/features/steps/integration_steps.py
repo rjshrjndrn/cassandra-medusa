@@ -1450,11 +1450,13 @@ def get_mgmt_api_jars(
             assert Path('/tmp/management-api-agent-3.x/target/datastax-mgmtapi-agent-3.x-0.1.0-SNAPSHOT.jar').is_file()
             Path('/tmp/management-api-agent/target/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar').symlink_to(
                 '/tmp/management-api-agent-3.x/target/datastax-mgmtapi-agent-3.x-0.1.0-SNAPSHOT.jar')
-        elif str.startswith(version, '4'):
+        elif str.startswith(version, '4') or 'github:apache/trunk' == version:
             # C* is version 4.x, use 4.x agent
             assert Path('/tmp/management-api-agent-4.x/target/datastax-mgmtapi-agent-4.x-0.1.0-SNAPSHOT.jar').is_file()
             Path('/tmp/management-api-agent/target/datastax-mgmtapi-agent-0.1.0-SNAPSHOT.jar').symlink_to(
                 '/tmp/management-api-agent-4.x/target/datastax-mgmtapi-agent-4.x-0.1.0-SNAPSHOT.jar')
+        else:
+            raise NotImplementedError('Cassandra version not supported: {}'.format(version))
 
 
 def rm_tree(pth):
